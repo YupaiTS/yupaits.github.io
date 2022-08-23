@@ -1,0 +1,599 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Java流式API | yupaits的博客</title><meta name="keywords" content="Java,Lambda表达式,Stream"><meta name="author" content="yupaits"><meta name="copyright" content="yupaits"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Java8中新增了Stream接口定义了支持顺序和并行操作元素序列操作的一系列标准方法。 为了执行计算，流操作被组合成一个流管道。 流管道由源（可能是数组、集合、生成器函数、I&#x2F;O 通道等）、零个或多个中间操作（将流转换为另一个流，例如filter(Predicate) ) 和终端操作（产生结果或副作用，例如count()或forEach(Consumer) ）。 流是懒惰的； 对源数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java流式API">
+<meta property="og:url" content="http://yupaits.com/2021/12/20/Java%E6%B5%81%E5%BC%8FAPI/index.html">
+<meta property="og:site_name" content="yupaits的博客">
+<meta property="og:description" content="Java8中新增了Stream接口定义了支持顺序和并行操作元素序列操作的一系列标准方法。 为了执行计算，流操作被组合成一个流管道。 流管道由源（可能是数组、集合、生成器函数、I&#x2F;O 通道等）、零个或多个中间操作（将流转换为另一个流，例如filter(Predicate) ) 和终端操作（产生结果或副作用，例如count()或forEach(Consumer) ）。 流是懒惰的； 对源数据">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yupaits.com/img/cover/post-cover7.png">
+<meta property="article:published_time" content="2021-12-20T06:30:15.000Z">
+<meta property="article:modified_time" content="2022-08-23T15:51:56.819Z">
+<meta property="article:author" content="yupaits">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Lambda表达式">
+<meta property="article:tag" content="Stream">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yupaits.com/img/cover/post-cover7.png"><link rel="shortcut icon" href="/favicon.png"><link rel="canonical" href="http://yupaits.com/2021/12/20/Java%E6%B5%81%E5%BC%8FAPI/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-8239100633886634',
+  enable_page_level_ads: 'true'
+});</script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?f4c5dd32b8bff25dd776c28eb5bf436d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java流式API',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-08-23 23:51:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.1.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">216</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">161</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">26</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 专题</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/%E6%96%87%E7%AB%A0%E6%94%B6%E5%BD%95/"><i class="fa-fw fas fa-newspaper"></i><span> 文章收录</span></a></li><li><a class="site-page child" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/"><i class="fa-fw fas fa-server"></i><span> 架构设计</span></a></li><li><a class="site-page child" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E7%AE%97%E6%B3%95/"><i class="fa-fw fas fa-database"></i><span> 数据结构-算法</span></a></li><li><a class="site-page child" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><i class="fa-fw fas fa-bezier-curve"></i><span> 设计模式</span></a></li><li><a class="site-page child" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8E%9F%E7%90%86/"><i class="fa-fw fas fa-network-wired"></i><span> 分布式系统原理</span></a></li><li><a class="site-page child" href="/categories/%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/"><i class="fa-fw fas fa-network-wired"></i><span> 大型网络应用架构</span></a></li><li><a class="site-page child" href="/categories/Java%E5%9F%BA%E7%A1%80/"><i class="fa-fw fab fa-java"></i><span> Java基础</span></a></li><li><a class="site-page child" href="/categories/Java%E8%BF%9B%E9%98%B6/"><i class="fa-fw fab fa-java"></i><span> Java进阶</span></a></li><li><a class="site-page child" href="/categories/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA/"><i class="fa-fw fab fa-java"></i><span> JVM虚拟机</span></a></li><li><a class="site-page child" href="/categories/Spring/"><i class="fa-fw fab fa-dev"></i><span> Spring</span></a></li><li><a class="site-page child" href="/categories/SpringCloud/"><i class="fa-fw fab fa-dev"></i><span> SpringCloud</span></a></li><li><a class="site-page child" href="/categories/Golang/"><i class="fa-fw fab fa-dev"></i><span> Golang</span></a></li><li><a class="site-page child" href="/categories/Docker/"><i class="fa-fw fab fa-docker"></i><span> Docker</span></a></li><li><a class="site-page child" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/"><i class="fa-fw fab fa-raspberry-pi"></i><span> 树莓派</span></a></li><li><a class="site-page child" href="/categories/yutool/"><i class="fa-fw fab fa-dev"></i><span> yutool系列</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/projects/"><i class="fa-fw fas fa-chart-bar"></i><span> 项目</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></div><div class="menus_item"><a class="site-page" href="/sites/"><i class="fa-fw fas fa-sitemap"></i><span> 站点</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/cover/post-cover7.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">yupaits的博客</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 专题</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/%E6%96%87%E7%AB%A0%E6%94%B6%E5%BD%95/"><i class="fa-fw fas fa-newspaper"></i><span> 文章收录</span></a></li><li><a class="site-page child" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/"><i class="fa-fw fas fa-server"></i><span> 架构设计</span></a></li><li><a class="site-page child" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E7%AE%97%E6%B3%95/"><i class="fa-fw fas fa-database"></i><span> 数据结构-算法</span></a></li><li><a class="site-page child" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><i class="fa-fw fas fa-bezier-curve"></i><span> 设计模式</span></a></li><li><a class="site-page child" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E5%8E%9F%E7%90%86/"><i class="fa-fw fas fa-network-wired"></i><span> 分布式系统原理</span></a></li><li><a class="site-page child" href="/categories/%E5%A4%A7%E5%9E%8B%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/"><i class="fa-fw fas fa-network-wired"></i><span> 大型网络应用架构</span></a></li><li><a class="site-page child" href="/categories/Java%E5%9F%BA%E7%A1%80/"><i class="fa-fw fab fa-java"></i><span> Java基础</span></a></li><li><a class="site-page child" href="/categories/Java%E8%BF%9B%E9%98%B6/"><i class="fa-fw fab fa-java"></i><span> Java进阶</span></a></li><li><a class="site-page child" href="/categories/JVM%E8%99%9A%E6%8B%9F%E6%9C%BA/"><i class="fa-fw fab fa-java"></i><span> JVM虚拟机</span></a></li><li><a class="site-page child" href="/categories/Spring/"><i class="fa-fw fab fa-dev"></i><span> Spring</span></a></li><li><a class="site-page child" href="/categories/SpringCloud/"><i class="fa-fw fab fa-dev"></i><span> SpringCloud</span></a></li><li><a class="site-page child" href="/categories/Golang/"><i class="fa-fw fab fa-dev"></i><span> Golang</span></a></li><li><a class="site-page child" href="/categories/Docker/"><i class="fa-fw fab fa-docker"></i><span> Docker</span></a></li><li><a class="site-page child" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/"><i class="fa-fw fab fa-raspberry-pi"></i><span> 树莓派</span></a></li><li><a class="site-page child" href="/categories/yutool/"><i class="fa-fw fab fa-dev"></i><span> yutool系列</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/projects/"><i class="fa-fw fas fa-chart-bar"></i><span> 项目</span></a></div><div class="menus_item"><a class="site-page" href="/books/"><i class="fa-fw fas fa-book"></i><span> 书单</span></a></div><div class="menus_item"><a class="site-page" href="/sites/"><i class="fa-fw fas fa-sitemap"></i><span> 站点</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Java流式API</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2021-12-20T06:30:15.000Z" title="undefined 2021-12-20 14:30:15">2021-12-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Java/">Java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>23分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Java流式API"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>Java8中新增了Stream接口定义了支持顺序和并行操作元素序列操作的一系列标准方法。</p>
+<p>为了执行计算，流操作被组合成一个流管道。 流管道由源（可能是数组、集合、生成器函数、I&#x2F;O 通道等）、零个或多个中间操作（将流转换为另一个流，例如filter(Predicate) ) 和终端操作（产生结果或副作用，例如<code>count()</code>或<code>forEach(Consumer)</code> ）。 流是懒惰的； 对源数据的计算仅在终端操作启动时进行，源元素仅在需要时消费。</p>
+<span id="more"></span>
+
+<p>集合和流虽然有一些表面上的相似之处，但有不同的目标。 集合主要涉及对其元素的有效管理和访问。 相比之下，流不提供直接访问或操作其元素的方法，而是关注声明性地描述它们的源以及将在该源上聚合执行的计算操作。 但是，如果提供的流操作没有提供所需的功能，则可以使用<code>iterator()</code>和<code>spliterator()</code>操作来执行受控遍历。</p>
+<p>流管道，可以看作是对流源的查询。 除非源明确设计用于并发修改（例如<code>ConcurrentHashMap</code> ），否则在查询流源时修改流源可能会导致不可预测或错误的行为。<br>大多数流操作都接受描述用户指定行为的参数，例如上面示例中传递给mapToInt的 lambda 表达式<code>w -&gt; w.getWeight()</code> 。 为了保持正确的行为，这些行为参数：</p>
+<ul>
+<li>必须是<strong>无干扰的</strong>（它们不修改流源）； </li>
+<li>在大多数情况下必须是<strong>无状态的</strong>（它们的结果不应依赖于在流管道执行期间可能发生变化的任何状态）。</li>
+<li>此类参数始终是<strong>函数式接口</strong>（例如<code>Function</code>实例，并且通常是 lambda 表达式或方法引用。 除非另有说明，否则这些参数必须为非 null 。</li>
+</ul>
+<p>一个流应该只被操作一次（调用一个中间或终端流操作）。 例如，这排除了“分叉”流，其中相同的源提供两个或多个管道，或者同一流的多次遍历。 如果流实现检测到流正在被重用，它可能会抛出<code>IllegalStateException</code> 。 但是，由于某些流操作可能会返回其接收器而不是新的流对象，因此可能无法在所有情况下检测到重用。</p>
+<p>流具有<code>close()</code>方法并实现<code>AutoCloseable</code> ，但几乎所有流实例实际上都不需要在使用后关闭。 通常，只有源是 IO 通道的流（例如<code>Files.lines(Path, Charset)</code>返回的<code>Files.lines(Path, Charset)</code> ）才需要关闭。 大多数流由集合、数组或生成函数支持，不需要特殊的资源管理。 （如果流确实需要关闭，则可以在try -with-resources 语句中将其声明为资源。）</p>
+<p>流管道可以顺序或并行执行。 这种执行模式是流的一个属性。 流是通过初始选择顺序或并行执行来创建的。 （例如， <code>Collection.stream()</code>创建一个顺序流， <code>Collection.parallelStream()</code>创建一个并行流。）这种执行模式的选择可以通过<code>sequential()</code>或<code>parallel()</code>方法修改，并且可以用<code>isParallel()</code>方法。</p>
+<h2 id="Stream-接口"><a href="#Stream-接口" class="headerlink" title="Stream 接口"></a>Stream 接口</h2><p>Stream接口中的方法按操作类型可分为两种：中间操作、终端操作。同时包含了创建Stream的一些静态方法。</p>
+<h3 id="中间操作"><a href="#中间操作" class="headerlink" title="中间操作"></a>中间操作</h3><h4 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h4><ul>
+<li>方法定义：<code>Stream&lt;T&gt; filter(Predicate&lt;? super T&gt; predicate);</code></li>
+<li>说明：返回由与给定谓词匹配的此流的元素组成的流。</li>
+<li>参数：predict - 一个无干扰的、无状态的谓词，应用于每个元素以确定是否应该包括它</li>
+</ul>
+<h4 id="map"><a href="#map" class="headerlink" title="map"></a>map</h4><ul>
+<li>方法定义：<code>&lt;R&gt; Stream&lt;R&gt; map(Function&lt;? super T, ? extends R&gt; mapper);</code></li>
+<li>说明：返回一个流，该流由将给定函数应用于此流的元素的结果组成。</li>
+<li>参数：mapper - 一个无干扰的、无状态的函数，适用于每个元素</li>
+<li>参数类型：R - 新流的元素类型</li>
+</ul>
+<h4 id="mapToInt"><a href="#mapToInt" class="headerlink" title="mapToInt"></a>mapToInt</h4><ul>
+<li>方法定义：<code>IntStream mapToInt(ToIntFunction&lt;? super T&gt; mapper);</code></li>
+<li>说明：返回一个IntStream它包含将给定函数应用于此流的元素的结果。</li>
+<li>参数：mapper - 一个无干扰的、无状态的函数，适用于每个元素</li>
+</ul>
+<h4 id="mapToLong"><a href="#mapToLong" class="headerlink" title="mapToLong"></a>mapToLong</h4><ul>
+<li>方法定义：<code>LongStream mapToLong(ToLongFunction&lt;? super T&gt; mapper);</code></li>
+<li>说明：返回一个LongStream其中包含将给定函数应用于此流的元素的结果。</li>
+<li>参数：mapper - 一个无干扰的、无状态的函数，适用于每个元素</li>
+</ul>
+<h4 id="mapToDouble"><a href="#mapToDouble" class="headerlink" title="mapToDouble"></a>mapToDouble</h4><ul>
+<li>方法定义：<code>DoubleStream mapToDouble(ToDoubleFunction&lt;? super T&gt; mapper);</code></li>
+<li>说明：返回一个DoubleStream其中包含将给定函数应用于此流的元素的结果。</li>
+<li>参数：mapper - 一个无干扰的、无状态的函数，适用于每个元素</li>
+</ul>
+<h4 id="flatMap"><a href="#flatMap" class="headerlink" title="flatMap"></a>flatMap</h4><ul>
+<li>方法定义：<code>&lt;R&gt; Stream&lt;R&gt; flatMap(Function&lt;? super T, ? extends Stream&lt;? extends R&gt;&gt; mapper)</code></li>
+<li>说明：返回一个流，该流由通过将提供的映射函数应用于每个元素而生成的映射流的内容替换此流的每个元素的结果组成。 每个映射流在其内容放入此流后closed 。 （如果映射流为null ，则使用空流代替。）</li>
+<li>参数：mapper - 一个无干扰的、无状态的函数，应用于产生新值流的每个元素</li>
+<li>类型参数：R - 新流的元素类型</li>
+<li>API注意事项：flatMap()操作的作用是对流的元素应用一对多转换，然后将结果元素展平为新的流。  示例：  如果orders是一个采购订单流，并且每个采购订单都包含一个行项目的集合，那么以下生成一个包含所有订单中所有行项目的流：  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">orders.flatMap(order -&gt; order.getLineItems().stream())...</span><br></pre></td></tr></table></figure>
+  如果path是文件的路径，则以下内容会生成该文件中包含的words流：  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Stream&lt;String&gt; lines = Files.lines(path, StandardCharsets.UTF_8);</span><br><span class="line">Stream&lt;String&gt; words = lines.flatMap(line -&gt; Stream.of(line.split(<span class="string">&quot; +&quot;</span>)));</span><br></pre></td></tr></table></figure>
+  传递给flatMap的mapper函数使用简单的正则表达式将一行拆分为一个单词数组，然后从该数组创建一个单词流。</li>
+</ul>
+<h4 id="flatMapToInt"><a href="#flatMapToInt" class="headerlink" title="flatMapToInt"></a>flatMapToInt</h4><ul>
+<li>方法定义：<code>IntStream flatMapToInt(Function&lt;? super T, ? extends IntStream&gt; mapper);</code></li>
+<li>说明：返回一个IntStream其中包含用通过将提供的映射函数应用于每个元素而生成的映射流的内容替换此流的每个元素的结果。 每个映射流在其内容放入此流后closed 。 （如果映射流为null ，则使用空流代替。）</li>
+<li>参数：mapper - 一个无干扰的、无状态的函数，应用于产生新值流的每个元素</li>
+</ul>
+<h4 id="flatMapToLong"><a href="#flatMapToLong" class="headerlink" title="flatMapToLong"></a>flatMapToLong</h4><ul>
+<li>方法定义：<code>LongStream flatMapToLong(Function&lt;? super T, ? extends LongStream&gt; mapper);</code></li>
+<li>说明：返回一个LongStream其中包含用通过将提供的映射函数应用于每个元素而生成的映射流的内容替换此流的每个元素的结果。 每个映射流在其内容放入此流后closed 。 （如果映射流为null ，则使用空流代替。）</li>
+<li>参数：mapper - 一个无干扰的、无状态的函数，应用于产生新值流的每个元素</li>
+</ul>
+<h4 id="flatMapToDouble"><a href="#flatMapToDouble" class="headerlink" title="flatMapToDouble"></a>flatMapToDouble</h4><ul>
+<li>方法定义：<code>DoubleStream flatMapToDouble(Function&lt;? super T, ? extends DoubleStream&gt; mapper);</code></li>
+<li>说明：返回一个DoubleStream其中包含用通过将提供的映射函数应用于每个元素而生成的映射流的内容替换此流的每个元素的结果。 每个映射流在其内容放入此流后closed 。 （如果映射流为null ，则使用空流代替。）</li>
+<li>参数：mapper - 一个无干扰的、无状态的函数，应用于产生新值流的每个元素</li>
+</ul>
+<h4 id="distinct"><a href="#distinct" class="headerlink" title="distinct"></a>distinct</h4><ul>
+<li>方法定义：<code>Stream&lt;T&gt; distinct();</code></li>
+<li>说明：返回由该流的不同元素（根据<code>Object.equals(Object)</code> ）组成的流。对于有序流，不同元素的选择是稳定的（对于重复元素，保留遇到顺序中最先出现的元素。）对于无序流，没有稳定性保证。</li>
+<li>有状态</li>
+<li>API注意事项：在并行管道中为distinct()保持稳定性相对昂贵（要求操作充当完全屏障，具有大量缓冲开销），并且通常不需要稳定性。 如果您的情况的语义允许，使用无序流源（例如<code>generate(Supplier)</code> ）或使用<code>unordered()</code>删除排序约束可能会显着提高并行管道中distinct()执行效率。 如果需要与遭遇顺序保持一致，并且您在并行管道中使用distinct()遇到性能或内存利用率低的问题，则切换到使用<code>sequential()</code>顺序执行可能会提高性能。</li>
+</ul>
+<h4 id="sorted"><a href="#sorted" class="headerlink" title="sorted"></a>sorted</h4><ul>
+<li>方法定义：<code>Stream&lt;T&gt; sorted();</code></li>
+<li>说明：返回由该流的元素组成的流，按自然顺序排序。 如果此流的元素不是Comparable ，则在执行终端操作时可能会抛出java.lang.ClassCastException 。对于有序流，排序是稳定的。 对于无序流，没有稳定性保证。</li>
+<li>有状态</li>
+</ul>
+<hr>
+<ul>
+<li>方法定义：<code>Stream&lt;T&gt; sorted(Comparator&lt;? super T&gt; comparator);</code></li>
+<li>说明：返回由该流的元素组成的流，根据提供的Comparator进行排序。对于有序流，排序是稳定的。 对于无序流，没有稳定性保证。</li>
+<li>参数：comparator - 一个无干扰的、无状态的Comparator ，用于比较流元素</li>
+<li>有状态</li>
+</ul>
+<h4 id="peek"><a href="#peek" class="headerlink" title="peek"></a>peek</h4><ul>
+<li><p>方法定义：<code>Stream&lt;T&gt; peek(Consumer&lt;? super T&gt; action);</code></p>
+</li>
+<li><p>说明：返回一个由该流的元素组成的流，另外在每个元素上执行提供的操作，因为元素从结果流中被消耗。对于并行流管道，可以在上游操作使元素可用的任何时间和线程中调用该操作。 如果操作修改共享状态，则它负责提供所需的同步。</p>
+</li>
+<li><p>参数：action – 在元素从流中消耗时对元素执行的非干扰操作</p>
+</li>
+<li><p>API注意事项：此方法的存在主要是为了支持调试，您希望在其中查看元素流经管道中的某个点时的情况：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Stream.of(<span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>, <span class="string">&quot;three&quot;</span>, <span class="string">&quot;four&quot;</span>)</span><br><span class="line">    .filter(e -&gt; e.length() &gt; <span class="number">3</span>)</span><br><span class="line">    .peek(e -&gt; System.out.println(<span class="string">&quot;Filtered value: &quot;</span> + e))</span><br><span class="line">    .map(String::toUpperCase)</span><br><span class="line">    .peek(e -&gt; System.out.println(<span class="string">&quot;Mapped value: &quot;</span> + e))</span><br><span class="line">    .collect(Collectors.toList());</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h4><ul>
+<li>方法定义：<code>Stream&lt;T&gt; limit(long maxSize);</code></li>
+<li>说明：返回由该流的元素组成的流，其长度被截断为不超过maxSize 。</li>
+<li>参数：maxSize – 流应该限制的元素数量</li>
+<li>短路状态</li>
+<li>抛出：IllegalArgumentException – 如果maxSize为负</li>
+<li>API注意事项：虽然limit()在顺序流管道上通常是一个廉价的操作，但它在有序并行管道上可能非常昂贵，特别是对于maxSize大值，因为limit(n)被限制为不仅返回任何n 个元素，而是第一个 n遇到顺序中的元素。 如果您的情况的语义允许，使用无序流源（例如<code>generate(Supplier)</code> ）或使用<code>unordered()</code>删除排序约束可能会导致并行管道中的limit()显着加速。 如果需要与遭遇顺序保持一致，并且您在并行管道中使用limit()遇到性能或内存利用率不佳的情况，则切换到使用<code>sequential()</code>顺序执行可能会提高性能。</li>
+</ul>
+<h4 id="skip"><a href="#skip" class="headerlink" title="skip"></a>skip</h4><ul>
+<li>方法定义：<code>Stream&lt;T&gt; skip(long n);</code></li>
+<li>说明：丢弃流的前n元素后，返回由该流的其余元素组成的流。 如果此流包含少于n元素，则将返回一个空流。</li>
+<li>参数：n - 要跳过的前导元素的数量</li>
+<li>有状态</li>
+<li>API注意事项：虽然skip()在顺序流管道上通常是一种廉价的操作，但它在有序并行管道上可能非常昂贵，尤其是对于n大值，因为skip(n)被限制为不仅跳过任何n 个元素，而且跳过前n个元素遇到顺序中的元素。 如果您的情况的语义允许，使用无序流源（例如<code>generate(Supplier)</code> ）或使用<code>unordered()</code>删除排序约束可能会导致并行管道中的skip()显着加速。 如果需要与遭遇顺序保持一致，并且您在并行管道中使用skip()遇到性能或内存利用率不佳的情况，则切换到使用<code>sequential()</code>顺序执行可能会提高性能。</li>
+</ul>
+<h3 id="终端操作"><a href="#终端操作" class="headerlink" title="终端操作"></a>终端操作</h3><h4 id="forEach"><a href="#forEach" class="headerlink" title="forEach"></a>forEach</h4><ul>
+<li>方法定义：<code>void forEach(Consumer&lt;? super T&gt; action);</code></li>
+<li>说明：对此流的每个元素执行一个操作。此操作的行为明显是不确定的。 对于并行流管道，此操作并不保证尊重流的相遇顺序，因为这样做会牺牲并行的利益。 对于任何给定的元素，可以在库选择的任何时间和线程中执行该操作。 如果动作访问共享状态，它负责提供所需的同步。</li>
+<li>参数：action – 对元素执行的非干扰操作</li>
+</ul>
+<h4 id="forEachOrdered"><a href="#forEachOrdered" class="headerlink" title="forEachOrdered"></a>forEachOrdered</h4><ul>
+<li>方法定义：<code>void forEachOrdered(Consumer&lt;? super T&gt; action);</code></li>
+<li>说明：如果流具有定义的遇到顺序，则按流的遇到顺序对此流的每个元素执行操作。此操作一次处理一个元素，如果存在，则按遇到顺序处理。 对一个元素执行操作发生在对后续元素执行操作之前，但对于任何给定元素，该操作可以在库选择的任何线程中执行。</li>
+<li>参数：action – 对元素执行的非干扰操作</li>
+</ul>
+<h4 id="toArray"><a href="#toArray" class="headerlink" title="toArray"></a>toArray</h4><ul>
+<li>方法定义：<code>Object[] toArray();</code></li>
+<li>说明：返回一个包含此流元素的数组。</li>
+<li>返回：包含此流元素的数组</li>
+</ul>
+<hr>
+<ul>
+<li><p>方法定义：<code>&lt;A&gt; A[] toArray(IntFunction&lt;A[]&gt; generator);</code></p>
+</li>
+<li><p>说明：返回一个包含此流元素的数组，使用提供的generator函数分配返回的数组，以及分区执行或调整大小可能需要的任何其他数组。</p>
+</li>
+<li><p>参数：generator — 一个函数，它产生一个所需类型和提供的长度的新数组</p>
+</li>
+<li><p>类型参数：A - 结果数组的元素类型</p>
+</li>
+<li><p>返回：包含此流中元素的数组</p>
+</li>
+<li><p>抛出：ArrayStoreException – 如果从数组生成器返回的数组的运行时类型不是此流中每个元素的运行时类型的超类型</p>
+</li>
+<li><p>API注意事项：生成器函数接受一个整数，它是所需数组的大小，并生成一个所需大小的数组。 这可以用数组构造函数引用简洁地表达：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Person[] men = people.stream()</span><br><span class="line">                        .filter(p -&gt; p.getGender() == MALE)</span><br><span class="line">                        .toArray(Person[]::<span class="keyword">new</span>);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h4><ul>
+<li><p>方法定义：<code>T reduce(T identity, BinaryOperator&lt;T&gt; accumulator);</code></p>
+</li>
+<li><p>说明：使用提供的标识值和关联累加函数对该流的元素执行归约，并返回归约后的值。 这相当于：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">T</span> <span class="variable">result</span> <span class="operator">=</span> identity;</span><br><span class="line"><span class="keyword">for</span> (T element : <span class="built_in">this</span> stream)</span><br><span class="line">    result = accumulator.apply(result, element)</span><br><span class="line"><span class="keyword">return</span> result;</span><br></pre></td></tr></table></figure>
+
+<p>  但不限于顺序执行。<br>  identity值必须是累加器函数的标识。 这意味着对于所有t ， accumulator.apply(identity, t)等于t 。 accumulator函数必须是关联函数。</p>
+</li>
+<li><p>参数：identity - 累积函数的身份值<br>  accumulator – 一个关联的、无干扰的、无状态的函数，用于组合两个值</p>
+</li>
+<li><p>返回：减少的结果</p>
+</li>
+<li><p>API注意事项：Sum、min、max、average 和 string 连接都是归约的特殊情况。 对一串数字求和可以表示为：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Integer</span> <span class="variable">sum</span> <span class="operator">=</span> integers.reduce(<span class="number">0</span>, (a, b) -&gt; a+b);</span><br></pre></td></tr></table></figure>
+
+<p>  或者：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Integer</span> <span class="variable">sum</span> <span class="operator">=</span> integers.reduce(<span class="number">0</span>, Integer::sum);</span><br></pre></td></tr></table></figure>
+
+<p>  虽然与简单地改变循环中的运行总数相比，这似乎是一种更迂回的执行聚合方式，但归约操作可以更优雅地并行化，无需额外的同步，并且大大降低了数据竞争的风险。</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>方法定义：<code>Optional&lt;T&gt; reduce(BinaryOperator&lt;T&gt; accumulator);</code></p>
+</li>
+<li><p>说明：使用关联累积函数对此流的元素执行缩减，并返回描述缩减值的Optional （如果有）。 这相当于：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="variable">foundAny</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"><span class="type">T</span> <span class="variable">result</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">for</span> (T element : <span class="built_in">this</span> stream) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!foundAny) &#123;</span><br><span class="line">        foundAny = <span class="literal">true</span>;</span><br><span class="line">        result = element;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        result = accumulator.apply(result, element);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> foundAny ? Optional.of(result) : Optional.empty();</span><br></pre></td></tr></table></figure>
+
+<p>  但不限于顺序执行。<br>  accumulator函数必须是关联函数。</p>
+</li>
+<li><p>参数：accumulator – 一个关联的、无干扰的、无状态的函数，用于组合两个值</p>
+</li>
+<li><p>返回：一个Optional描述减少的结果</p>
+</li>
+<li><p>抛出：NullPointerException – 如果归约结果为空</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>方法定义：<code>&lt;U&gt; U reduce(U identity, BiFunction&lt;U, ? super T, U&gt; accumulator, BinaryOperator&lt;U&gt; combiner);</code></p>
+</li>
+<li><p>说明：使用提供的标识、累加和组合函数对该流的元素执行归约。 这相当于：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">U</span> <span class="variable">result</span> <span class="operator">=</span> identity;</span><br><span class="line"><span class="keyword">for</span> (T element : <span class="built_in">this</span> stream)</span><br><span class="line">    result = accumulator.apply(result, element)</span><br><span class="line"><span class="keyword">return</span> result;</span><br></pre></td></tr></table></figure>
+
+<p>  但不限于顺序执行。<br>  identity值必须是组合器功能的标识。 这意味着对于所有u ， combiner(identity, u)等于u 。 此外， combiner功能必须与accumulator功能兼容； 对于所有u和t ，以下必须成立：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">combiner.apply(u, accumulator.apply(identity, t)) == accumulator.apply(u, t)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>参数：identity - 组合器功能的身份值<br>  accumulator – 一种关联的、无干扰的、无状态的函数，用于将附加元素合并到结果中<br>  combiner - 一个关联的、无干扰的、无状态的函数，用于组合两个值，它必须与累加器函数兼容</p>
+</li>
+<li><p>类型参数: U - 结果的类型</p>
+</li>
+<li><p>返回：减少的结果</p>
+</li>
+<li><p>API注意事项：许多使用这种形式的归约可以通过map和reduce操作的显式组合更简单地表示。 accumulator函数充当融合的映射器和累加器，有时比单独的映射和归约更有效，例如当知道先前减少的值可以避免某些计算时。</p>
+</li>
+</ul>
+<h4 id="collect"><a href="#collect" class="headerlink" title="collect"></a>collect</h4><ul>
+<li><p>方法定义：<code>&lt;R&gt; R collect(Supplier&lt;R&gt; supplier, BiConsumer&lt;R, ? super T&gt; accumulator, BiConsumer&lt;R, R&gt; combiner);</code></p>
+</li>
+<li><p>说明：对此流的元素执行可变的归约操作。 可变归约是其中归约值是可变结果容器（例如ArrayList ，并且通过更新结果的状态而不是替换结果来合并元素。 这产生的结果相当于：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">R</span> <span class="variable">result</span> <span class="operator">=</span> supplier.get();</span><br><span class="line"><span class="keyword">for</span> (T element : <span class="built_in">this</span> stream)</span><br><span class="line">    accumulator.accept(result, element);</span><br><span class="line"><span class="keyword">return</span> result;</span><br></pre></td></tr></table></figure>
+
+<p>  与reduce(Object, BinaryOperator)相比 ， collect操作可以并行化而无需额外的同步。</p>
+</li>
+<li><p>参数：supplier - 个创建新结果容器的函数。 对于并行执行，此函数可能会被多次调用，并且每次都必须返回一个新值。<br>  accumulator – 一种关联的、无干扰的、无状态的函数，用于将附加元素合并到结果中<br>  combiner - 一个关联的、无干扰的、无状态的函数，用于组合两个值，它必须与累加器函数兼容</p>
+</li>
+<li><p>类型参数: R - 结果的类型</p>
+</li>
+<li><p>返回：减少的结果</p>
+</li>
+<li><p>API注意事项：JDK 中有许多现有类，它们的签名非常适合与方法引用一起用作collect()参数。 例如，以下将把字符串累积到一个ArrayList ：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">    List&lt;String&gt; asList = stringStream.collect(ArrayList::<span class="keyword">new</span>, ArrayList::add,</span><br><span class="line">                                            ArrayList::addAll);</span><br><span class="line">    ```                                                </span><br><span class="line"></span><br><span class="line">    以下将采用字符串流并将它们连接成一个字符串：</span><br><span class="line"></span><br><span class="line">    ```Java</span><br><span class="line">    <span class="type">String</span> <span class="variable">concat</span> <span class="operator">=</span> stringStream.collect(StringBuilder::<span class="keyword">new</span>, StringBuilder::append,</span><br><span class="line">                                        StringBuilder::append)</span><br><span class="line">                                .toString();</span><br><span class="line">    ```                                    </span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">- 方法定义：`&lt;R, A&gt; R <span class="title function_">collect</span><span class="params">(Collector&lt;? <span class="built_in">super</span> T, A, R&gt; collector)</span>;`</span><br><span class="line">- 说明：使用Collector对此流的元素执行可变归约操作。 Collector封装了用作collect(Supplier, BiConsumer, BiConsumer)参数的函数，允许重用收集策略和组合收集操作，例如多级分组或分区。</span><br><span class="line">    如果流是并行的，并且Collector是concurrent ，并且流是无序的或收集器是unordered ，那么将执行并发减少（有关并发减少的详细信息，请参阅Collector 。）</span><br><span class="line">    当并行执行时，可以实例化、填充和合并多个中间结果，以保持可变数据结构的隔离。 因此，即使与非线程安全的数据结构（例如ArrayList ）并行执行，也不需要额外的同步来进行并行缩减。</span><br><span class="line">- 参数：collector - 描述减少的Collector</span><br><span class="line">- 类型参数：R - 结果的类型  </span><br><span class="line">    A - Collector的中间累积类型</span><br><span class="line">- 返回：减少的结果</span><br><span class="line">- API注意事项：以下将把字符串累积到一个 ArrayList 中：</span><br><span class="line"></span><br><span class="line">    ```Java</span><br><span class="line">    List&lt;String&gt; asList = stringStream.collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+
+<p>  以下将按城市对Person对象进行分类：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, List&lt;Person&gt;&gt; peopleByCity</span><br><span class="line">    = personStream.collect(Collectors.groupingBy(Person::getCity));</span><br></pre></td></tr></table></figure>
+
+<p>  下面将按州和城市对Person对象进行分类，将两个Collector级联在一起：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Map&lt;String, List&lt;Person&gt;&gt;&gt; peopleByStateAndCity</span><br><span class="line">    = personStream.collect(Collectors.groupingBy(Person::getState,</span><br><span class="line">                                                Collectors.groupingBy(Person::getCity)));</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="min"><a href="#min" class="headerlink" title="min"></a>min</h4><ul>
+<li>方法定义：<code>Optional&lt;T&gt; min(Comparator&lt;? super T&gt; comparator);</code></li>
+<li>说明：根据提供的Comparator返回此流的最小元素。 这是一个reduction的特例。</li>
+<li>参数：comparator - 一个无干扰的、无状态的Comparator来比较这个流的元素</li>
+<li>返回：一个Optional描述此流的最小元素，或空Optional如果流是空</li>
+<li>抛出：NullPointerException – 如果最小元素为空</li>
+</ul>
+<h4 id="max"><a href="#max" class="headerlink" title="max"></a>max</h4><ul>
+<li>方法定义：<code>Optional&lt;T&gt; max(Comparator&lt;? super T&gt; comparator);</code></li>
+<li>说明：根据提供的Comparator返回此流的最大元素。 这是一个reduction的特例。</li>
+<li>参数：comparator - 一个无干扰的、无状态的Comparator来比较这个流的元素</li>
+<li>返回：一个Optional描述此流的最大元素，或空Optional如果流是空</li>
+<li>抛出：NullPointerException – 如果最大元素为空</li>
+</ul>
+<h4 id="count"><a href="#count" class="headerlink" title="count"></a>count</h4><ul>
+<li><p>方法定义：<code>long count();</code></p>
+</li>
+<li><p>说明：返回此流中元素的计数。 这是归约的一个特例，相当于：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> mapToLong(e -&gt; <span class="number">1L</span>).sum();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>返回：此流中的元素计数</p>
+</li>
+</ul>
+<h4 id="anyMatch"><a href="#anyMatch" class="headerlink" title="anyMatch"></a>anyMatch</h4><ul>
+<li>方法定义：<code>boolean anyMatch(Predicate&lt;? super T&gt; predicate);</code></li>
+<li>说明：返回此流的任何元素是否与提供的谓词匹配。 如果不是确定结果所必需的，则可以不对所有元素评估谓词。 如果流为空，则返回false并且不评估谓词。</li>
+<li>参数：predicate - 一个无干扰的、无状态的谓词，适用于这个流的元素</li>
+<li>返回：如果流的任何元素与提供的谓词匹配，则为true ，否则为false</li>
+<li>短路操作</li>
+<li>API注意事项：此方法评估流元素上谓词的存在量化（对于某些 x P(x)）。</li>
+</ul>
+<h4 id="allMatch"><a href="#allMatch" class="headerlink" title="allMatch"></a>allMatch</h4><ul>
+<li>方法定义：<code>boolean allMatch(Predicate&lt;? super T&gt; predicate);</code></li>
+<li>说明：返回此流的所有元素是否与提供的谓词匹配。 如果不是确定结果所必需的，则可以不对所有元素评估谓词。 如果流为空，则返回true并且不评估谓词。</li>
+<li>参数：predicate - 一个无干扰的、无状态的谓词，适用于这个流的元素</li>
+<li>返回：true如果任一该流中的所有元素匹配提供谓词或流是空的，否则false</li>
+<li>短路操作</li>
+<li>API注意事项：此方法评估流元素上谓词的通用量化（对于所有 x P(x)）。 如果流为空，则称量化为空满足且始终为true （无论 P(x) 是多少）。</li>
+</ul>
+<h4 id="noneMatch"><a href="#noneMatch" class="headerlink" title="noneMatch"></a>noneMatch</h4><ul>
+<li>方法定义：<code>boolean noneMatch(Predicate&lt;? super T&gt; predicate);</code></li>
+<li>说明：返回此流的元素是否与提供的谓词匹配。 如果不是确定结果所必需的，则可以不对所有元素评估谓词。 如果流为空，则返回true并且不评估谓词。</li>
+<li>参数：predicate - 一个无干扰的、无状态的谓词，适用于这个流的元素</li>
+<li>返回：true如果要么没有流的元件匹配提供谓词或流是空的，否则false</li>
+<li>短路操作</li>
+<li>API注意事项：此方法评估对流元素（对于所有 x ~P(x)）的否定谓词的通用量化。 如果流为空，则称量化为空满足且始终为true ，无论 P(x) 如何。</li>
+</ul>
+<h4 id="findFirst"><a href="#findFirst" class="headerlink" title="findFirst"></a>findFirst</h4><ul>
+<li>方法定义：<code>Optional&lt;T&gt; findFirst();</code></li>
+<li>说明：返回一个Optional描述本流的第一个元素，或空Optional如果流是空的。 如果流没有遇到顺序，则可以返回任何元素。</li>
+<li>返回：一个Optional描述此流的第一个元素，或空Optional如果流是空</li>
+<li>短路操作</li>
+<li>抛出：NullPointerException – 如果所选元素为空</li>
+</ul>
+<h4 id="findAny"><a href="#findAny" class="headerlink" title="findAny"></a>findAny</h4><ul>
+<li>方法定义：<code>Optional&lt;T&gt; findAny();</code></li>
+<li>说明：返回一个Optional描述流的一些元件，或一个空Optional如果流是空的。此操作的行为明显是不确定的； 可以自由选择流中的任何元素。 这是为了在并行操作中实现最大性能； 代价是对同一源的多次调用可能不会返回相同的结果。 （如果需要稳定的结果，请改用findFirst() 。）</li>
+<li>返回：一个Optional描述本流的一些元件，或一个空Optional如果流是空</li>
+<li>短路操作</li>
+<li>抛出：NullPointerException – 如果所选元素为空</li>
+</ul>
+<h3 id="创建Stream的静态方法"><a href="#创建Stream的静态方法" class="headerlink" title="创建Stream的静态方法"></a>创建Stream的静态方法</h3><h4 id="builder"><a href="#builder" class="headerlink" title="builder"></a>builder</h4><ul>
+<li><p>方法定义：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span>&lt;T&gt; Builder&lt;T&gt; <span class="title function_">builder</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Streams</span>.StreamBuilderImpl&lt;&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>说明：返回Stream的构建器。</p>
+</li>
+<li><p>类型参数：T - 元素类型</p>
+</li>
+<li><p>返回：流构建器</p>
+</li>
+</ul>
+<h4 id="empty"><a href="#empty" class="headerlink" title="empty"></a>empty</h4><ul>
+<li><p>方法定义：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span>&lt;T&gt; Stream&lt;T&gt; <span class="title function_">empty</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> StreamSupport.stream(Spliterators.&lt;T&gt;emptySpliterator(), <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>说明：返回一个空的顺序Stream。</p>
+</li>
+<li><p>类型参数：T - 流元素的类型</p>
+</li>
+<li><p>返回：空的顺序流</p>
+</li>
+</ul>
+<h4 id="of"><a href="#of" class="headerlink" title="of"></a>of</h4><ul>
+<li><p>方法定义：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span>&lt;T&gt; Stream&lt;T&gt; <span class="title function_">of</span><span class="params">(T t)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> StreamSupport.stream(<span class="keyword">new</span> <span class="title class_">Streams</span>.StreamBuilderImpl&lt;&gt;(t), <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>说明：返回包含单个元素的顺序Stream 。</p>
+</li>
+<li><p>参数：t – 单个元素</p>
+</li>
+<li><p>类型参数：T - 流元素的类型</p>
+</li>
+<li><p>返回：单例顺序流</p>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>方法定义：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SafeVarargs</span></span><br><span class="line"><span class="meta">@SuppressWarnings(&quot;varargs&quot;)</span> <span class="comment">// Creating a stream from an array is safe</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span>&lt;T&gt; Stream&lt;T&gt; <span class="title function_">of</span><span class="params">(T... values)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> Arrays.stream(values);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>说明：返回一个顺序有序的流，其元素是指定的值。</p>
+</li>
+<li><p>参数：values – 新流的元素</p>
+</li>
+<li><p>类型参数：T – 流元素的类型</p>
+</li>
+<li><p>返回：新流</p>
+</li>
+</ul>
+<h4 id="iterate"><a href="#iterate" class="headerlink" title="iterate"></a>iterate</h4><ul>
+<li><p>方法定义：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span>&lt;T&gt; Stream&lt;T&gt; <span class="title function_">iterate</span><span class="params">(<span class="keyword">final</span> T seed, <span class="keyword">final</span> UnaryOperator&lt;T&gt; f)</span> &#123;</span><br><span class="line">    Objects.requireNonNull(f);</span><br><span class="line">    <span class="keyword">final</span> Iterator&lt;T&gt; iterator = <span class="keyword">new</span> <span class="title class_">Iterator</span>&lt;T&gt;() &#123;</span><br><span class="line">        <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">        <span class="type">T</span> <span class="variable">t</span> <span class="operator">=</span> (T) Streams.NONE;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> T <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="type">return</span> <span class="variable">t</span> <span class="operator">=</span> (t == Streams.NONE) ? seed : f.apply(t);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> StreamSupport.stream(Spliterators.spliteratorUnknownSize(</span><br><span class="line">            iterator,</span><br><span class="line">            Spliterator.ORDERED | Spliterator.IMMUTABLE), <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>说明：返回通过将函数f迭代应用到初始元素seed产生的无限顺序有序Stream ，产生由seed 、 f(seed) 、 f(f(seed))等组成的Stream 。<br>Stream的第一个元素（位置0 ）将是提供的seed 。 对于n &gt; 0 ，位置n处的元素将是将函数f应用于位置n - 1处的元素的结果。</p>
+</li>
+<li><p>参数：seed - 初始元素<br>  f – 应用于前一个元素以产生新元素的函数</p>
+</li>
+<li><p>类型参数：T – 流元素的类型</p>
+</li>
+<li><p>返回：一个新的顺序Stream</p>
+</li>
+</ul>
+<h4 id="generate"><a href="#generate" class="headerlink" title="generate"></a>generate</h4><ul>
+<li><p>方法定义：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span>&lt;T&gt; Stream&lt;T&gt; <span class="title function_">generate</span><span class="params">(Supplier&lt;T&gt; s)</span> &#123;</span><br><span class="line">    Objects.requireNonNull(s);</span><br><span class="line">    <span class="keyword">return</span> StreamSupport.stream(</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">StreamSpliterators</span>.InfiniteSupplyingSpliterator.OfRef&lt;&gt;(Long.MAX_VALUE, s), <span class="literal">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>说明：返回一个无限连续的无序流，其中每个元素都由提供的Supplier生成。 这适用于生成恒定流、随机元素流等。</p>
+</li>
+<li><p>参数：s – 生成元素的Supplier</p>
+</li>
+<li><p>类型参数：T – 流元素的类型</p>
+</li>
+<li><p>返回：一个新的无限顺序无序Stream</p>
+</li>
+</ul>
+<h4 id="concat"><a href="#concat" class="headerlink" title="concat"></a>concat</h4><ul>
+<li><p>方法定义：</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; Stream&lt;T&gt; <span class="title function_">concat</span><span class="params">(Stream&lt;? extends T&gt; a, Stream&lt;? extends T&gt; b)</span> &#123;</span><br><span class="line">    Objects.requireNonNull(a);</span><br><span class="line">    Objects.requireNonNull(b);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">    Spliterator&lt;T&gt; split = <span class="keyword">new</span> <span class="title class_">Streams</span>.ConcatSpliterator.OfRef&lt;&gt;(</span><br><span class="line">            (Spliterator&lt;T&gt;) a.spliterator(), (Spliterator&lt;T&gt;) b.spliterator());</span><br><span class="line">    Stream&lt;T&gt; stream = StreamSupport.stream(split, a.isParallel() || b.isParallel());</span><br><span class="line">    <span class="keyword">return</span> stream.onClose(Streams.composedClose(a, b));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>说明：创建一个延迟连接的流，其元素是第一个流的所有元素，后跟第二个流的所有元素。 如果两个输入流都是有序的，则结果流是有序的，如果任一输入流是并行的，则结果流是并行的。 当结果流关闭时，将调用两个输入流的关闭处理程序。</p>
+</li>
+<li><p>参数：a – 第一个流<br>  b – 第二个流</p>
+</li>
+<li><p>类型参数：T - 流元素的类型</p>
+</li>
+<li><p>返回：两个输入流的串联</p>
+</li>
+<li><p>实施注意事项：从重复串联构造流时要小心。 访问深度级联流的元素可能会导致深度调用链，甚至StackOverflowException 。</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">yupaits</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yupaits.com/2021/12/20/Java%E6%B5%81%E5%BC%8FAPI/">http://yupaits.com/2021/12/20/Java流式API/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yupaits.com" target="_blank">yupaits的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a><a class="post-meta__tags" href="/tags/Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/">Lambda表达式</a><a class="post-meta__tags" href="/tags/Stream/">Stream</a></div><div class="post_share"><div class="social-share" data-image="/img/cover/post-cover7.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/12/19/yutool/yutool%E7%AE%80%E4%BB%8B/"><img class="next-cover" src="/img/cover/post-cover1.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">yutool简介</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/12/19/Java%E7%9A%84Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%8E%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3/" title="Java的Lambda表达式与函数式接口"><img class="cover" src="/img/cover/post-cover7.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-19</div><div class="title">Java的Lambda表达式与函数式接口</div></div></a></div><div><a href="/2020/02/04/FullGC%E6%8E%92%E6%9F%A5%E6%B5%81%E7%A8%8B/" title="Full GC排查流程"><img class="cover" src="/img/cover/post-cover2.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-04</div><div class="title">Full GC排查流程</div></div></a></div><div><a href="/2020/02/04/Java%E6%9E%9A%E4%B8%BE%E7%B1%BB%E5%AE%9E%E4%BE%8B/" title="Java枚举类实例"><img class="cover" src="/img/cover/post-cover2.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-04</div><div class="title">Java枚举类实例</div></div></a></div><div><a href="/2020/02/04/Java%E8%BF%90%E7%AE%97%E7%AC%A6instanceof%E7%9A%84%E7%94%A8%E6%B3%95/" title="Java运算符instanceof的用法"><img class="cover" src="/img/cover/post-cover8.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-04</div><div class="title">Java运算符instanceof的用法</div></div></a></div><div><a href="/2020/02/04/Java%E9%80%92%E5%BD%92%E7%9A%84%E5%AE%9E%E8%B7%B5/" title="Java递归的实践"><img class="cover" src="/img/cover/post-cover4.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-04</div><div class="title">Java递归的实践</div></div></a></div><div><a href="/2020/02/04/Java%E9%9B%86%E5%90%88%E6%9D%82%E8%B0%88/" title="Java集合杂谈"><img class="cover" src="/img/cover/post-cover3.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-02-04</div><div class="title">Java集合杂谈</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/favicon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">yupaits</div><div class="author-info__description">俯仰一生，最惧无为</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">216</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">161</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">26</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/yupaits"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/yupaits" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:ts495606653@hotmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">技术分享，欢迎讨论！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Stream-%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.</span> <span class="toc-text">Stream 接口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.</span> <span class="toc-text">中间操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#filter"><span class="toc-number">1.1.1.</span> <span class="toc-text">filter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#map"><span class="toc-number">1.1.2.</span> <span class="toc-text">map</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mapToInt"><span class="toc-number">1.1.3.</span> <span class="toc-text">mapToInt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mapToLong"><span class="toc-number">1.1.4.</span> <span class="toc-text">mapToLong</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mapToDouble"><span class="toc-number">1.1.5.</span> <span class="toc-text">mapToDouble</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flatMap"><span class="toc-number">1.1.6.</span> <span class="toc-text">flatMap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flatMapToInt"><span class="toc-number">1.1.7.</span> <span class="toc-text">flatMapToInt</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flatMapToLong"><span class="toc-number">1.1.8.</span> <span class="toc-text">flatMapToLong</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flatMapToDouble"><span class="toc-number">1.1.9.</span> <span class="toc-text">flatMapToDouble</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#distinct"><span class="toc-number">1.1.10.</span> <span class="toc-text">distinct</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sorted"><span class="toc-number">1.1.11.</span> <span class="toc-text">sorted</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#peek"><span class="toc-number">1.1.12.</span> <span class="toc-text">peek</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#limit"><span class="toc-number">1.1.13.</span> <span class="toc-text">limit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#skip"><span class="toc-number">1.1.14.</span> <span class="toc-text">skip</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%88%E7%AB%AF%E6%93%8D%E4%BD%9C"><span class="toc-number">1.2.</span> <span class="toc-text">终端操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#forEach"><span class="toc-number">1.2.1.</span> <span class="toc-text">forEach</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#forEachOrdered"><span class="toc-number">1.2.2.</span> <span class="toc-text">forEachOrdered</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#toArray"><span class="toc-number">1.2.3.</span> <span class="toc-text">toArray</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#reduce"><span class="toc-number">1.2.4.</span> <span class="toc-text">reduce</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#collect"><span class="toc-number">1.2.5.</span> <span class="toc-text">collect</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#min"><span class="toc-number">1.2.6.</span> <span class="toc-text">min</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#max"><span class="toc-number">1.2.7.</span> <span class="toc-text">max</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#count"><span class="toc-number">1.2.8.</span> <span class="toc-text">count</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#anyMatch"><span class="toc-number">1.2.9.</span> <span class="toc-text">anyMatch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#allMatch"><span class="toc-number">1.2.10.</span> <span class="toc-text">allMatch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#noneMatch"><span class="toc-number">1.2.11.</span> <span class="toc-text">noneMatch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#findFirst"><span class="toc-number">1.2.12.</span> <span class="toc-text">findFirst</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#findAny"><span class="toc-number">1.2.13.</span> <span class="toc-text">findAny</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAStream%E7%9A%84%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">创建Stream的静态方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#builder"><span class="toc-number">1.3.1.</span> <span class="toc-text">builder</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#empty"><span class="toc-number">1.3.2.</span> <span class="toc-text">empty</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#of"><span class="toc-number">1.3.3.</span> <span class="toc-text">of</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#iterate"><span class="toc-number">1.3.4.</span> <span class="toc-text">iterate</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#generate"><span class="toc-number">1.3.5.</span> <span class="toc-text">generate</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#concat"><span class="toc-number">1.3.6.</span> <span class="toc-text">concat</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/12/20/Java%E6%B5%81%E5%BC%8FAPI/" title="Java流式API">Java流式API</a><time datetime="2021-12-20T06:30:15.000Z" title="发表于 2021-12-20 14:30:15">2021-12-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/12/19/yutool/yutool%E7%AE%80%E4%BB%8B/" title="yutool简介">yutool简介</a><time datetime="2021-12-19T13:32:05.000Z" title="发表于 2021-12-19 21:32:05">2021-12-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/12/19/Java%E7%9A%84Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%8E%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3/" title="Java的Lambda表达式与函数式接口">Java的Lambda表达式与函数式接口</a><time datetime="2021-12-19T12:04:31.000Z" title="发表于 2021-12-19 20:04:31">2021-12-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/08/11/web-architecture/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/" title="消息中间件">消息中间件</a><time datetime="2021-08-11T15:42:08.000Z" title="发表于 2021-08-11 23:42:08">2021-08-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2021/07/01/architecture/%E9%80%9A%E7%94%A8%E5%8F%AF%E7%BC%96%E6%8E%92%E7%8A%B6%E6%80%81%E6%9C%BA%E5%BC%95%E6%93%8E%E8%AE%BE%E8%AE%A1/" title="通用可编排状态机引擎设计">通用可编排状态机引擎设计</a><time datetime="2021-07-01T07:55:15.000Z" title="发表于 2021-07-01 15:55:15">2021-07-01</time></div></div></div></div></div></div></main><footer id="footer" style="background: #1f1f1f"><div id="footer-wrap"><div class="copyright">&copy;2016 - 2022 By yupaits</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="rightside.chat_btn"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'Daf7PjBeGob17A0xwU6E4YT6-gzGzoHsz',
+      appKey: 'O4QrwOFRkDaREqRjoMwG9fD8',
+      placeholder: '记得留下你的昵称和邮箱，可以快速收到回复',
+      avatar: 'retro',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+      requiredFields: ["nick,mail"],
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script>((window.gitter = {}).chat = {}).options = {
+  disableDefaultChat: true,
+};
+document.addEventListener('gitter-sidecar-ready', (e) => {
+  const GitterChat = e.detail.Chat
+  let chat
+
+  function initGitter () {
+    chat = new GitterChat({
+      room: 'yupaits/yupaits-blog',
+      activationElement: '#chat_btn'
+    });
+  }
+
+  initGitter()
+
+  if (false) {
+    document.addEventListener('pjax:complete', () => {
+      chat.destroy()
+      initGitter()
+    })
+  }
+
+})</script><script src="https://sidecar.gitter.im/dist/sidecar.v1.js" async="async" defer="defer"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
